@@ -1,5 +1,6 @@
 /*
   Icon Font: fontcustom
+  Uses fonts in the Dataverse app itself, so must be deployed on the same machine (and not at github.io for example)
 */
 
 @font-face {
