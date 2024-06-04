@@ -45,6 +45,10 @@ label {
     background-color: beige;
     padding: 10px;
 }
+.warn {
+   background-color: bisque;
+    padding: 10px;
+}
 .file-exists {
     background-color: lightblue;
 }
@@ -73,4 +77,8 @@ body {
 }
 .button {
     background-color: #0039F5;
+}
+.badchars {
+   background-color: bisque;
+    padding: 10px;
 }
