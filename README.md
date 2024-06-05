@@ -3,6 +3,24 @@ A web tool for uploading folders of files to a Dataverse dataset. See [the wiki]
 
 Hosted at https://gdcc.github.io/dvwebloader
 
+##This is a QDR fork of dvwebloader with some minor style changes
+
+Local install instructions at QDR
+
+
+
+    cd /var/www
+    git clone <repo url>
+    cd html
+    ln -s /var/www/dvwebloader/src /var/www/html/dvwebloader
+    
+Optional:
+
+    cd /var/www/dvwebloader
+    chmod 755 localinstall.sh
+    cd src
+    ./localinstall.sh`
+
 ### Current integration mechanism (v5.13+):
 
 Configure dvwebloader as an integrated [UploadMethod](https://guides.dataverse.org/en/latest/installation/config.html#uploadmethods):
