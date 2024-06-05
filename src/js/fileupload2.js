@@ -134,7 +134,7 @@ function addIconAndLogo(siteUrl) {
                 .attr(
                     'href',
                     siteUrl +
-                    '/javax.faces.resource/images/fav/apple-touch-icon.png.xhtml'))
+                    '/jakarta.faces.resource/images/fav/apple-touch-icon.png.xhtml'))
         .append(
             $('<link/>')
                 .attr('type', 'image/png')
@@ -143,7 +143,7 @@ function addIconAndLogo(siteUrl) {
                 .attr(
                     'href',
                     siteUrl +
-                    '/javax.faces.resource/images/fav/favicon-16x16.png.xhtml'))
+                    '/jakarta.faces.resource/images/fav/favicon-16x16.png.xhtml'))
         .append(
             $('<link/>')
                 .attr('type', 'image/png')
@@ -152,7 +152,7 @@ function addIconAndLogo(siteUrl) {
                 .attr(
                     'href',
                     siteUrl +
-                    '/javax.faces.resource/images/fav/favicon-32x32.png.xhtml'))
+                    '/jakarta.faces.resource/images/fav/favicon-32x32.png.xhtml'))
 
         .append(
             $('<link/>')
@@ -161,7 +161,7 @@ function addIconAndLogo(siteUrl) {
                 .attr(
                     'href',
                     siteUrl +
-                    '/javax.faces.resource/images/fav/safari-pinned-tab.svg.xhtml'))
+                    '/jakarta.faces.resource/images/fav/safari-pinned-tab.svg.xhtml'))
         .append(
             $('<meta/>')
                 .attr('content', '#da532c')
@@ -172,8 +172,7 @@ function addIconAndLogo(siteUrl) {
                 .attr('name', 'theme-color'));
     $('#logo')
         .attr('src', siteUrl + '/logos/preview_logo.svg')
-        .attr('onerror', "handleImageError(this)");
-
+        .attr('onerror', "handleImageError(this,'".concat(siteUrl).concat("')"));
 }
 function initTranslation() {
     initSpanTxt('title-text', 'title');
@@ -1038,16 +1037,4 @@ function getChecksum(blob, cbProgress) {
             }
         });
     });
-}
-function handleImageError(image) {
-    let currentFallback = parseInt(image.getAttribute('data-fallback-index') || '0');
-
-    if(currentFallback == 0){
-        image.src = siteUrl + '/logos/preview_logo.png';
-        image.dataset.fallbackIndex = 1;
-    }
-    else{
-        image.src = 'images/logo_placeholder.png';
-        image.onerror = null;
-    }
 }
