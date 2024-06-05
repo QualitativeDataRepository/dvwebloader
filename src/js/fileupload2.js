@@ -668,7 +668,7 @@ function queueFileForDirectUpload(file) {
     let badPath = (path.match(/^[a-zA-Z0-9_\-.\\\/ ]*$/)===null);
     if(badPath) {
       if($('.warn').length==0) {
-        addMessage('warn', 'msgRequiredFileOrPathNameChange');
+        addMessage('warn', 'msgRequiredPathOrFileNameChange');
       }
       //Munge path according to rules
       path = path.replace(/[^\w\d_\\.\\\/ ]+/g,'_');
@@ -701,7 +701,7 @@ function queueFileForDirectUpload(file) {
     let badChars = !(fUpload.file.name.match(/[[\/:*?|;#]/)===null);
     if(badChars) {
       if($('.warn').length==0) {
-        addMessage('warn', 'msgRequiredFileNameChange');
+        addMessage('warn', 'msgRequiredPathOrFileNameChange');
       }
     }
     row.append($('<input/>').prop('type', 'checkbox').prop('id', 'file_' + fileBlock.children().length).prop('checked', send));
