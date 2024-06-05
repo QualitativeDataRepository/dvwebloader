@@ -666,7 +666,6 @@ function queueFileForDirectUpload(file) {
     //Remove filename part
     let path =origPath.substring(0, origPath.length - file.name.length);
     let badPath = (path.match(/^[\w\d_\-\.\\\/ ]*$/)===null);
-    console.log
     if(badPath) {
       if($('.warn').length==0) {
         addMessage('warn', 'msgRequiredPathOrFileNameChange');
