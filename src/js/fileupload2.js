@@ -714,8 +714,8 @@ function queueFileForDirectUpload(file) {
       fnameElement.addClass('badchars');
     }
     row.append(fnameElement)
-        .append($('<div/>').text(file.size)).append($('<div/>').addClass('ui - fileupload - progress'))
-        .append($('<div/>').addClass('ui - fileupload - cancel'));
+        .append($('<div/>').text(file.size)).append($('<div/>').addClass('ui-fileupload-progress'))
+        .append($('<div/>').addClass('ui-fileupload-cancel'));
     console.log('adding click handler for file_' + fileBlock.children().length);
     $('#file_' + fileBlock.children().length).click(toggleUpload);
 }
