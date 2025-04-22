@@ -189,8 +189,13 @@ function initTranslation() {
 function initSpanTxt(htmlId, key) {
     $('#'+htmlId).text(getLocalizedString(dvLocale, key));
 }
-function addMessage(type, key) {
-    $('#messages').html('').append($('<div/>').addClass(type).text(getLocalizedString(dvLocale, key)));
+function addMessage(type, key, details) {
+    $('#messages').html('')
+        .append($('<div/>').addClass(type).text(getLocalizedString(dvLocale, key)));
+    
+    if (details) {
+        $('#messages').append($('<div/>').addClass(type).addClass(type + '-details').text(details));
+    }
 }
 
 async function populatePageMetadata(data) {
@@ -894,6 +899,7 @@ async function directUploadFinished() {
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log('Failure: ' + jqXHR.status);
                         console.log('Failure: ' + errorThrown);
+                        addMessage("failure", "msgUploadToDataverseFailed", "Status: " + jqXHR.status + ", Error: " + errorThrown);
                         //uploadFailure(jqXHR, thisFile);
                     }
                 });
