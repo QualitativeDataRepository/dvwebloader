@@ -413,13 +413,13 @@ var fileUpload = class fileUploadClass {
             var upid = filerows[i].getAttribute('upid');
             if (typeof upid === "undefined" || upid === null || upid === '') {
                 var newUpId = getUpId();
-                filerows[i].setAttribute('upid', newUpId);
+                filerows[i].setAttribute('upid', 'file_' + newUpId);
             }
         }
         //Get the list of files to upload
         var files = $('.ui-fileupload-files');
         //Find the corresponding row (assumes that the file order and the order of rows is the same)
-        var fileNode = files.find("[upid='" + thisFile + "']");
+        var fileNode = files.find("[upid='file_" + thisFile + "']");
         //Decrement number queued for processing
         console.log('Decrementing fip from :' + filesInProgress);
         filesInProgress = filesInProgress - 1;
@@ -585,7 +585,7 @@ var fileUpload = class fileUploadClass {
         if (directUploadReport) {
             getChecksum(this.file, prog => {
                 var current = 1 + prog;
-                $('[upid="' + this.id + '"] progress').attr({
+                $('[upid="file_' + this.id + '"] progress').attr({
                     value: current,
                     max: 2
                 });
