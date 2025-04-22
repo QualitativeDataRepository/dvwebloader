@@ -1,11 +1,13 @@
 import getLocalizedString from './lang.js';
 
+let startUploadsHasBeenCalled = false;
 var fileList = [];
 var rawFileMap = {};
 var toRegisterFileList = [];
 var observer2 = null;
 var numDone = 0;
 var delay = 100; //milliseconds
+var draftExists = false;
 var UploadState = {
     QUEUED: 'queued',
     REQUESTING: 'requesting',
@@ -48,6 +50,7 @@ var queryParams;
 var dvLocale;
 
 $(document).ready(function() {
+    startUploadsHasBeenCalled  = false;
     queryParams = new URLSearchParams(window.location.search.substring(1));
     siteUrl = queryParams.get("siteUrl");
     console.log(siteUrl);
@@ -189,15 +192,13 @@ function initSpanTxt(htmlId, key) {
 function addMessage(type, key) {
     $('#messages').html('').append($('<div/>').addClass(type).text(getLocalizedString(dvLocale, key)));
 }
+
 async function populatePageMetadata(data) {
     var mdFields = data.metadataBlocks.citation.fields;
     var title = "";
     var authors = "";
     var datasetUrl = siteUrl + '/dataset.xhtml?persistentId=' + datasetPid;
-    var version = queryParams.get("datasetversion");
-    if (version === ":draft") {
-        version = "DRAFT";
-    }
+    draftExists = data.latestVersionPublishingState && data.latestVersionPublishingState === "DRAFT";
 
     for (var field in mdFields) {
         if (mdFields[field].typeName === "title") {
@@ -665,20 +666,20 @@ function queueFileForDirectUpload(file) {
     var fUpload = new fileUpload(file);
     let send = true;
     let origPath = file.webkitRelativePath.substring(file.webkitRelativePath.indexOf('/') + 1);
-    console.log("Original Path: " + origPath);
+    
     //Remove filename part
     let path =origPath.substring(0, origPath.length - file.name.length);
-    let badPath = (path.match(/^[\w\d_\-\.\\\/ ]*$/)===null);
+    let badPath = (path.match(/^[\w\-\.\\\/ ]*$/)===null);
     if(badPath) {
       if($('.warn').length==0) {
         addMessage('warn', 'msgRequiredPathOrFileNameChange');
       }
       //Munge path according to rules
-      path = path.replace(/[^\w\d_\\.\\\/ ]+/g,'_');
+      path = path.replace(/[^\w\-\.\\\/ ]+/g,'_');
     }
     //Re-Add filename, munge filename if needed
-    path=path.concat(file.name.replace(/[\/:*?|;#]/g,'_'));
-    console.log("Final Path: " + path);
+    path=path.concat(file.name.replace(/[:<>;#/"*|?\\]/g,'_'));
+    
     //Now check versus existing files
     if (path in existingFiles) {
         send = false;
@@ -701,10 +702,10 @@ function queueFileForDirectUpload(file) {
     if (!send) {
         row.addClass('file-exists');
     }
-    let badChars = !(fUpload.file.name.match(/[[\/:*?|;#]/)===null);
+    let badChars = !(fUpload.file.name.match(/[:<>;#\/"*|?\\]/)===null);
     if(badChars) {
       if($('.warn').length==0) {
-        addMessage('warn', 'msgRequiredPathOrFileNameChange');
+          addMessage('warn', 'msgRequiredPathOrFileNameChange');
       }
     }
     row.append($('<input/>').prop('type', 'checkbox').prop('id', 'file_' + fileBlock.children().length).prop('checked', send));
@@ -725,7 +726,7 @@ function toggleUpload() {
     console.log($('.ui-fileupload-row').children('input:checked').length);
     if ($('.ui-fileupload-row').children('input:checked').length !== 0) {
         console.log('yes');
-        if ($('#upload').length === 0) {
+        if ($('#upload').length === 0 && !startUploadsHasBeenCalled) {
             $('<button/>').prop('id', 'upload').text(getLocalizedString(dvLocale, 'startUpload')).addClass('button').click(startUploads).insertBefore($('#messages'));
             addMessage('info', 'msgStartUpload');
         }
@@ -736,6 +737,7 @@ function toggleUpload() {
 }
 
 function startUploads() {
+    startUploadsHasBeenCalled = true;
     $('#top button').remove();
     let checked = $('#filelist>.ui-fileupload-files input:checked');
     checked.each(function() {
@@ -850,12 +852,12 @@ async function directUploadFinished() {
                     let entry = {};
                     entry.storageIdentifier = fup.storageId;
                     //Remove bad file name chars
-                    entry.fileName = fup.file.name.replace(/[\/:*?|;#]/g,'_');
+                    entry.fileName = fup.file.name.replace(/[:<>;#/"*|?\\]/g,'_');
                     let path = fup.file.webkitRelativePath;
                     console.log(path);
                     path = path.substring(path.indexOf('/'), path.lastIndexOf('/'));
                     //Remove bad path chars
-                    path = path.replace(/[^\w\d_\\.\\\/ ]+/g,'_');
+                    path = path.replace(/[^\w\-\.\\\/ ]+/g,'_');
                     if (path.length !== 0) {
                         entry.directoryLabel = path;
                     }
@@ -883,7 +885,11 @@ async function directUploadFinished() {
                     processData: false,
                     success: function(body, statusText, jqXHR) {
                         console.log("All files sent to " + siteUrl + '/dataset.xhtml?persistentId=doi:' + datasetPid + '&version=DRAFT');
-                        addMessage('success', 'msgUploadComplete');
+                        if(draftExists) {
+                          addMessage('success', 'msgUploadComplete');
+                        } else {
+                          addMessage('success', 'msgUploadCompleteNewDraft');
+                        }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {
                         console.log('Failure: ' + jqXHR.status);
