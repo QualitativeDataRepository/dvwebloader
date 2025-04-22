@@ -97,6 +97,7 @@ body {
 }
 .button:disabled {
     background: #4479BA;
+    border-color: #20538D!important;
 }
 .button:hover {
 	border-color: lightblue;
