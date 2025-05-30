@@ -327,8 +327,8 @@ async function retrieveDatasetInfo() {
                 let df = entry.dataFile;
                 let convertedFile = false;
                 if (("originalFileFormat" in df)
-                    && (!df.contentType === df.originalFileFormat)) {
-                    console.log("The file named " + df.getString("filename")
+                    && (!(df.contentType === df.originalFileFormat))) {
+                    console.log("The file named " + df.filename
                         + " on the server was created by Dataverse's ingest process from an original uploaded file");
                     convertedFile = true;
                 }
@@ -745,7 +745,7 @@ var fileUpload = class fileUploadClass {
 }
     ;
 function removeExtension(name) {
-    let extIndex = name.indexOf(".");
+    let extIndex = name.lastIndexOf(".");
     let sepIndex = name.indexOf('/');
     if (extIndex > sepIndex) {
         return name.substring(0, extIndex);
