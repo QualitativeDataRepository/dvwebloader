@@ -23,6 +23,9 @@ const translations = {
         msgDeselectAll: "Deselect all",
         msgMaxFilesExceeded: "Maximum number of files exceeded. Uncheck some files to enable upload.",
         msgMaxFilesReached: "Maximum number of files reached. Uncheck some files before selecting more.",
+        msgDatasetLocked: "This dataset is currently locked. File uploads are not allowed at this time.",
+        msgDatasetLockedInReview: "This dataset is currently In Review. You are not allowed to upload files at this time.",
+        msgErrorRetrievingDataset: "An error occurred while retrieving dataset information."
     },
     fr: {
         title: "Envoi d'un dossier",
@@ -47,6 +50,9 @@ const translations = {
         msgDeselectAll: "Tout désélectionner",
         msgMaxFilesExceeded: "Nombre maximal de fichiers dépassé. Décochez certains fichiers pour activer le transfert.",
         msgMaxFilesReached: "Nombre maximal de fichiers atteint. Décochez certains fichiers avant d'en sélectionner d'autres.",
+        msgDatasetLocked: "Ce jeu de données est actuellement verrouillé. Les envois de fichiers ne sont pas autorisés pour le moment.",
+        msgDatasetLockedInReview: "Ce jeu de données est actuellement en cours de révision. Vous n'êtes pas autorisé à télécharger des fichiers pour le moment.",
+        msgErrorRetrievingDataset: "Une erreur s'est produite lors de la récupération des informations du jeu de données."
     },
 };
 
