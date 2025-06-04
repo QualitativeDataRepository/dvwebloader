@@ -238,6 +238,17 @@ function addMessage(type, key, ...keyArgs) {
     $('#messages').html('')
         .append($('<div/>').addClass(type).html(msg));
 }
+function addContentWarning(key, ...keyArgs) {
+    let msg = getLocalizedString(dvLocale, key);
+    
+    if(keyArgs && Array.isArray(keyArgs)) {
+        for (var i = 0; i < keyArgs.length; i++) {
+            msg = msg.replaceAll('{'+i+'}',keyArgs[i]);
+        }
+    }
+    $('#content-warnings').html('')
+        .append($('<div/>').addClass('warn').html(msg));
+}
 
 async function populatePageMetadata(data) {
     var mdFields = data.metadataBlocks.citation.fields;
@@ -765,8 +776,8 @@ function queueFileForDirectUpload(file) {
     let path =origPath.substring(0, origPath.length - file.name.length);
     let badPath = (path.match(/^[\w\-\.\\\/ ]*$/)===null);
     if(badPath) {
-      if($('.warn').length==0) {
-        addMessage('warn', 'msgRequiredPathOrFileNameChange');
+      if($('#content-warnings.warn').length==0) {
+        addContentWarning('msgRequiredPathOrFileNameChange');
       }
       //Munge path according to rules
       path = path.replace(/[^\w\-\.\\\/ ]+/g,'_');
@@ -799,8 +810,8 @@ function queueFileForDirectUpload(file) {
     }
     let badChars = !(fUpload.file.name.match(/[:<>;#\/"*|?\\]/)===null);
     if(badChars) {
-      if($('.warn').length==0) {
-          addMessage('warn', 'msgRequiredPathOrFileNameChange');
+      if($('#content-warnings.warn').length==0) {
+          addContentWarning('msgRequiredPathOrFileNameChange');
       }
     }
     row.append($('<input/>').prop('type', 'checkbox').prop('id', 'file_' + fUpload.id).prop('checked', send));
