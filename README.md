@@ -76,3 +76,4 @@ curl -X POST -H 'Content-type: application/json' http://localhost:8080/api/admin
 ```
 
 Sponsored by UiT/DataverseNO
+Contributions from the Texas Digital Library, QDR, and others.
