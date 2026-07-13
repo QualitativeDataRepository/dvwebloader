@@ -415,11 +415,20 @@ async function populatePageMetadata(data) {
             }
         }
     }
-    let mdDiv = $('<div/>').append($('<h2/>').text(getLocalizedString(dvLocale, 'uploadingTo')).append($('<a/>').prop("href", datasetUrl).prop('target', '_blank').text(title)));
+    let container = $('<div/>');
+    container.append($('<h2/>').text(getLocalizedString(dvLocale, 'uploadingTo')));
+
+    let block = $('<div/>').addClass('metadata-block');
+    block.append($('<a/>').addClass('metadata-title').prop("href", datasetUrl).prop('target', '_blank').text(title));
+
     if (authors.length > 0) {
-        mdDiv.append($('<p/>').text(authors));
+        block.append($('<div/>').addClass('metadata-authors').text(authors));
     }
-    $('#top').prepend(mdDiv);
+
+    block.append($('<div/>').addClass('metadata-doi').text(datasetPid));
+
+    container.append(block);
+    $('#top').prepend(container);
 }
 
 /**
