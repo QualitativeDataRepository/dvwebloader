@@ -92,7 +92,7 @@ body {
     background-color: #0039F5;
     font-family:AntoniaH2;
 }
-.button:disabled {
+.button.disabled {
     background: #4479BA;
     border-color: #20538D!important;
 }
