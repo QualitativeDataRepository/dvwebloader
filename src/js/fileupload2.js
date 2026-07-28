@@ -1035,7 +1035,7 @@ var fileUpload = class fileUploadClass {
                 context: this,
                 cache: false,
                 processData: false,
-                contentType: 'application/octet-stream',
+                contentType: 'text/plain',
                 success: function() {
                     //ToDo - cancelling abandons the file. It is marked as temp so can be cleaned up later, but would be good to remove now (requires either sending a presigned delete URL or adding a callback to delete only a temp file
                     if (!cancelled) {
@@ -1106,11 +1106,16 @@ var fileUpload = class fileUploadClass {
                         context: this,
                         cache: false,
                         processData: false,
-                        contentType: 'application/octet-stream',
+                        contentType: 'text/plain',
                         success: function(data, status, response) {
                             console.log('Successful upload of part ' + key + ' of ' + Object.keys(this.urls.urls).length);
                             //The header has quotes around the eTag
-                            this.etags[key] = response.getResponseHeader('ETag').replace(/["]+/g, '');
+                            var etag = response.getResponseHeader('ETag');
+                            if (etag) {
+                                this.etags[key] = etag.replace(/["]+/g, '');
+                            } else {
+                                this.etags[key] = -1;
+                            }
                             this.numEtags = this.numEtags + 1;
                             if (this.numEtags === Object.keys(this.urls.urls).length) {
                                 this.multipartComplete();
@@ -1159,8 +1164,10 @@ var fileUpload = class fileUploadClass {
         console.log('reporting file ' + this.file.name);
         var allGood = true;
         //Safety check - verify that all eTags were set
-        for (let val in this.etags.values()) {
-            if (val === -1) {
+        var numParts = Object.keys(this.urls.urls).length;
+        for (var i = 1; i <= numParts; i++) {
+            //Should never be undefined but AI likes defensive programming
+            if (this.etags[i] === -1 || typeof this.etags[i] === 'undefined') {
                 allGood = false;
                 break;
             }
@@ -1224,7 +1231,8 @@ var fileUpload = class fileUploadClass {
     }
     async finishMPUpload() {
         var eTagsObject = {};
-        for (var i = 1; i <= this.numEtags; i++) {
+        var numParts = Object.keys(this.urls.urls).length;
+        for (var i = 1; i <= numParts; i++) {
             eTagsObject[i] = this.etags[i];
         }
         ajaxWithRetry({
